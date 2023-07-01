@@ -1,0 +1,130 @@
+#switch case for file operations
+echo "Menu : "
+echo "1) To create an empty file "
+echo "2) To view contents of a file "
+echo "3) To execute a file "
+echo "4) To remane a file "
+echo "5) To delete/remove a file"
+echo "6) To split a file"
+echo "7) To check permissions of a file"
+echo "8) To exit"
+read choice
+
+if [ $choice -eq 8 ]
+then
+        exit
+elif [ $choice -lt 1 ]
+then
+        echo "Invalid Choice"
+elif [ $choice -gt 8 ]
+then
+        echo "Invalid Choice"
+else
+        echo "Enter file name : "
+        read file
+        if [ $choice -eq 1 ]
+        then
+                echo "File creating..."
+                touch $file
+                echo "File created..."
+                ls
+                echo
+        elif [ ! -f $file ]
+        then
+                echo "It is not a file "
+        else
+                case $choice in
+                        2) echo "Opening $file...."
+                                echo 
+                                cat $file ;;
+                        3) echo "Excuting $file ...."
+                                echo
+                                chmod a+x $file
+                                ./$file
+                                echo ;;
+                        4) echo "Enter new name of $file :"
+                                read newname
+                                echo "Renaming..."
+                                mv $file $newname
+                                echo "$file is renamed"
+                                ls
+                                echo ;;
+                        5) echo "Deleting $file ..."
+                                rm $file
+                                echo $file "is deleted sucessfully"
+                                ls
+                                echo ;;
+                        6) echo "Enter tagname for your file : "
+                                read tagname
+                                echo "How would you like to split $file: "
+                                echo "1) Based on Number of lines"
+                                echo "2) Based on number of words"
+                                read selection
+
+                                case $selection in
+                                        1) echo "Spliting $file based on number of line"
+                                                echo "Enter maximun number of lines you want in your file : "
+                                                read no_of_lines
+                                                split -l $no_of_lines $file $tagname
+                                                echo "$file splited according to $no_of_lines lines per file"
+                                                echo "To view the file use cat $tagname (aa-zz)"
+                                                echo ;;
+                                        2) echo "Spliting $file based on number of words"
+                                                echo "Enter maximum number of words you want in your file : "
+                                                read no_of_words
+                                                split -n $no_of_words $file $tagname
+                                                echo "$file splited according to $no_of_words words per file "
+                                                echo "To view the file use cat $tagname (aa-zz)"
+                                                echo ;;
+                                        *) echo "Invalid choice " ;;
+                                esac
+                                echo ;;
+                        7) echo "Which permission would you like to check of $file : "
+                                echo "1) Read"
+                                echo "2) Write"
+                                echo "3) Execute "
+                                echo "4) All "
+                                read per_choice
+
+                                case $per_choice in
+                                        1) echo "Checking read permission for $file"
+                                                if [ -r $file ]
+                                                then
+                                                        echo "$file has read permission "
+                                                else
+                                                        echo "$file does not have read permission"
+                                                fi ;;
+                                        2) echo "Checking write permission for $file"
+                                                if [ -w $file ]
+                                                then
+                                                        echo "$file has write permission"
+                                                else
+                                                        echo "$file does not have write permission"
+                                                fi ;;
+                                        3) echo "Checking execute permission for $file "
+                                                if [ -x $file ]
+                                                then
+                                                        echo "$file has execute permission"
+                                                else
+                                                        echo "$file does not have execute permission "
+                                                fi;;
+                                        4) echo "Checking all 3 permissions: "
+                                                if [ -r $file ]
+                                                then
+                                                        if [ -w $file ]
+                                                        then
+                                                                if [ -x $file ]
+                                                                then
+                                                                        echo "$file has read,write and execute permission"
+                                                                else
+                                                                        echo "$file does not have execute  permissions "
+                                                                fi
+                                                        fi
+                                                fi;;
+                                        *) echo "Invalid Choice";;
+                                esac
+                                echo ;;
+                esac
+                echo
+        fi
+fi
